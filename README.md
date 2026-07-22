@@ -28,7 +28,7 @@ Toda la información se guarda en un archivo SQLite local. La interfaz se sirve 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <repo-url> fice
+git clone https://github.com/ItsRhyas/FICE fice
 cd fice
 ```
 
