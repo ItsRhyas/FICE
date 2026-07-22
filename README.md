@@ -60,22 +60,30 @@ Para instrucciones detalladas por sistema operativo, consultá [`docs/setup.md`]
 
 ### 3. Ejecutar
 
+**Linux / macOS:**
+
 ```bash
 chmod +x fice.sh
 ./fice.sh
+```
+
+**Windows:**
+
+```cmd
+fice.bat
 ```
 
 El script se encarga de crear el entorno virtual, instalar las dependencias de Python y abrir la ventana nativa de la app. La primera vez puede tardar unos minutos mientras se descargan los paquetes.
 
 ## Usage
 
-El launcher `./fice.sh` acepta un argumento opcional:
+Ambos launchers aceptan los mismos modos:
 
-| Comando        | Qué hace                                                                 |
-|----------------|--------------------------------------------------------------------------|
-| `./fice.sh`    | Modo normal: abre la ventana nativa de la app.                           |
-| `./fice.sh dev`| Modo desarrollo: levanta el servidor en `http://127.0.0.1:8000` con autoreload. Útil para editar código con hot-reload. |
-| `./fice.sh test` | Corre la suite de tests con pytest.                                    |
+| Linux / macOS     | Windows        | Qué hace                                                                 |
+|--------------------|----------------|--------------------------------------------------------------------------|
+| `./fice.sh`       | `fice.bat`     | Modo normal: abre la ventana nativa de la app.                           |
+| `./fice.sh dev`   | `fice.bat dev` | Modo desarrollo: levanta el servidor en `http://127.0.0.1:8000` con autoreload. |
+| `./fice.sh test`  | `fice.bat test`| Corre la suite de tests con pytest.                                      |
 
 ## Project Structure
 
@@ -98,7 +106,8 @@ FICE/
 │   ├── test_models.py
 │   └── test_transactions.py
 ├── data/                   # Base de datos SQLite (generada al primer arranque)
-├── fice.sh                 # Launcher multiplataforma
+├── fice.sh                 # Launcher (Linux / macOS)
+├── fice.bat                # Launcher (Windows)
 ├── main.py                 # Entry point desktop (arranca FastAPI + pywebview)
 ├── requirements.txt        # Dependencias de Python
 └── openspec/               # Specs y cambios bajo el flujo OpenSpec
