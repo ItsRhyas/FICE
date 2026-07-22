@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar cuenta' if cuenta else 'Nueva cuenta' }} — FICE{% endblock %}
+
+{% block content %}
+<h1>{{ 'Editar cuenta' if cuenta else 'Nueva cuenta' }}</h1>
+
+{% if error %}
+<div class="alert alert-error">{{ error }}</div>
+{% endif %}
+
+<form
+    {% if cuenta %}
+    hx-put="/accounts/{{ cuenta.id }}"
+    {% else %}
+    hx-post="/accounts"
+    {% endif %}
+    hx-target="body"
+    hx-push-url="/accounts"
+>
+    <div class="form-group">
+        <label for="name">Nombre</label>
+        <input
+            id="name"
+            name="name"
+            type="text"
+            value="{{ cuenta.name if cuenta else name | default('') }}"
+            required
+            maxlength="120"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="type">Tipo</label>
+        <select id="type" name="type" required {% if cuenta %}disabled{% endif %}>
+            <option value="">Seleccione...</option>
+            <option value="banco" {% if (cuenta and cuenta.type == 'banco') or (not cuenta and type == 'banco') %}selected{% endif %}>Banco</option>
+            <option value="efectivo" {% if (cuenta and cuenta.type == 'efectivo') or (not cuenta and type == 'efectivo') %}selected{% endif %}>Efectivo</option>
+            <option value="ahorro" {% if (cuenta and cuenta.type == 'ahorro') or (not cuenta and type == 'ahorro') %}selected{% endif %}>Ahorro</option>
+        </select>
+        {% if cuenta %}<input type="hidden" name="type" value="{{ cuenta.type }}">{% endif %}
+        <p class="hint">El tipo no se puede cambiar después de crear la cuenta.</p>
+    </div>
+
+    <div class="form-group">
+        <label for="currency">Moneda</label>
+        <select id="currency" name="currency" required {% if cuenta %}disabled{% endif %}>
+            <option value="">Seleccione...</option>
+            <option value="USD" {% if (cuenta and cuenta.currency == 'USD') or (not cuenta and currency == 'USD') %}selected{% endif %}>USD</option>
+            <option value="NIO" {% if (cuenta and cuenta.currency == 'NIO') or (not cuenta and currency == 'NIO') %}selected{% endif %}>NIO</option>
+        </select>
+        {% if cuenta %}<input type="hidden" name="currency" value="{{ cuenta.currency }}">{% endif %}
+        <p class="hint">La moneda no se puede cambiar después de crear la cuenta.</p>
+    </div>
+
+    <div class="form-group">
+        <label for="opening_balance_cents">Saldo inicial (centavos)</label>
+        <input
+            id="opening_balance_cents"
+            name="opening_balance_cents"
+            type="number"
+            step="1"
+            value="{{ cuenta.opening_balance_cents if cuenta else opening_balance_cents | default(0) }}"
+            required
+            {% if cuenta %}disabled{% endif %}
+        >
+        {% if cuenta %}<input type="hidden" name="opening_balance_cents" value="{{ cuenta.opening_balance_cents }}">{% endif %}
+        <p class="hint">El saldo inicial no se puede cambiar después de crear la cuenta.</p>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' if cuenta else 'Crear cuenta' }}</button>
+        <a href="/accounts" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

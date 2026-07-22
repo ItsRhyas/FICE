@@ -1,0 +1,45 @@
+# FICE — Personal Finance Tracker
+# SDD Configuration
+
+context: |
+  Personal finance tracker v1 implemented and archived (fice-tracker).
+  Stack: Python 3.11+ / FastAPI / SQLite / SQLModel / Jinja2 / HTMX / Chart.js / pywebview.
+  All money stored as integer cents. Balances computed on read, never stored.
+  Spanish UI labels, English code identifiers. Desktop app via pywebview.
+  72 tests passing across 4 suites. 3 domains: account-management, transaction-recording, dashboard.
+
+strict_tdd: false
+testing:
+  runner: none
+  layers:
+    unit: false
+    integration: false
+    e2e: false
+  coverage: false
+  quality:
+    linter: false
+    type_checker: false
+    formatter: false
+
+phase_rules:
+  proposal:
+    requires: []
+    produces: proposal
+  spec:
+    requires: [proposal]
+    produces: spec
+  design:
+    requires: [proposal]
+    produces: design
+  tasks:
+    requires: [spec, design]
+    produces: tasks
+  apply:
+    requires: [tasks, spec, design]
+    produces: apply-progress
+  verify:
+    requires: [spec, tasks, apply-progress]
+    produces: verify-report
+  archive:
+    requires: [all]
+    produces: archive-report

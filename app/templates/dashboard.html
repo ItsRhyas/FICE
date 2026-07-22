@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — FICE{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h1>Dashboard</h1>
+    </div>
+
+    <section class="dashboard-row" aria-label="Resumen general">
+        <div class="dashboard-card" id="net-worth" hx-get="/partials/net-worth" hx-trigger="load">
+            {% include "partials/_net_worth.html" %}
+        </div>
+
+        <div class="dashboard-card" id="month-summary" hx-get="/partials/month-summary" hx-trigger="load">
+            {% include "partials/_month_summary.html" %}
+        </div>
+    </section>
+
+    <section class="dashboard-row" aria-label="Gráficos">
+        <div class="dashboard-card chart-card">
+            <h2>Ingresos vs egresos</h2>
+            <div class="chart-container">
+                <canvas id="monthly-summary-chart"></canvas>
+            </div>
+        </div>
+
+        <div class="dashboard-card chart-card">
+            <h2>Distribución por cuenta</h2>
+            <div class="chart-container doughnut-container">
+                <canvas id="balance-distribution-chart"></canvas>
+            </div>
+        </div>
+
+        <div class="dashboard-card chart-card wide">
+            <h2>Evolución del patrimonio</h2>
+            <div class="chart-container">
+                <canvas id="net-worth-trend-chart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-row" aria-label="Detalles">
+        <div class="dashboard-card" id="account-balances" hx-get="/partials/account-balances" hx-trigger="load">
+            {% include "partials/_account_balances.html" %}
+        </div>
+
+        <div class="dashboard-card wide" id="recent-transactions" hx-get="/partials/recent-transactions" hx-trigger="load">
+            {% include "partials/_recent_transactions.html" %}
+        </div>
+    </section>
+</div>
+
+<script src="/static/js/charts.js"></script>
+{% endblock %}

@@ -1,0 +1,38 @@
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Test / coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.cache/
+
+# Build artifacts
+*.egg-info/
+build/
+dist/
+
+# SDD tracking (non-project)
+.atl/
+
+# FICE runtime data
+/data/
+*.db
+*.db-shm
+*.db-wal
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.env

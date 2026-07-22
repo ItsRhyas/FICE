@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Cuentas — FICE{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Cuentas</h1>
+    <a class="btn btn-primary" href="/accounts/new">Nueva cuenta</a>
+</div>
+
+{% if accounts %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Moneda</th>
+            <th class="numeric">Saldo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in accounts %}
+        {% set cuenta = item.cuenta %}
+        <tr>
+            <td>
+                <a href="/accounts/{{ cuenta.id }}">{{ cuenta.name }}</a>
+            </td>
+            <td>{{ cuenta.type }}</td>
+            <td>{{ cuenta.currency }}</td>
+            <td class="numeric">{{ cuenta.currency }} {{ "%.2f"|format(item.balance / 100) }}</td>
+            <td class="actions">
+                <a class="btn btn-small" href="/accounts/{{ cuenta.id }}/edit">Editar</a>
+                <button
+                    class="btn btn-small btn-secondary"
+                    hx-post="/accounts/{{ cuenta.id }}/archive"
+                    hx-confirm="¿{{ 'Restaurar' if cuenta.archived else 'Archivar' }} cuenta '{{ cuenta.name }}'?"
+                    hx-target="body"
+                    hx-push-url="/accounts"
+                >
+                    {{ 'Restaurar' if cuenta.archived else 'Archivar' }}
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty-state">No hay cuentas activas. <a href="/accounts/new">Crea una cuenta</a>.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Movimientos — FICE{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Movimientos</h1>
+    <a class="btn btn-primary" href="/transactions/new">Nuevo movimiento</a>
+</div>
+
+<form class="filter-bar" method="get" action="/transactions">
+    <div class="form-group">
+        <label for="account_id">Cuenta</label>
+        <select id="account_id" name="account_id">
+            <option value="">Todas</option>
+            {% for cuenta in accounts.values() %}
+            <option value="{{ cuenta.id }}" {% if account_id|string == cuenta.id|string %}selected{% endif %}>
+                {{ cuenta.name }} ({{ cuenta.currency }})
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="type">Tipo</label>
+        <select id="type" name="type">
+            <option value="">Todos</option>
+            <option value="income" {% if type == 'income' %}selected{% endif %}>Ingreso</option>
+            <option value="expense" {% if type == 'expense' %}selected{% endif %}>Egreso</option>
+            <option value="transfer" {% if type == 'transfer' %}selected{% endif %}>Transferencia</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="from_date">Desde</label>
+        <input id="from_date" name="from_date" type="date" value="{{ from_date }}">
+    </div>
+    <div class="form-group">
+        <label for="to_date">Hasta</label>
+        <input id="to_date" name="to_date" type="date" value="{{ to_date }}">
+    </div>
+    <div class="form-actions filter-actions">
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a href="/transactions" class="btn btn-secondary">Limpiar</a>
+    </div>
+</form>
+
+{% if transactions %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Cuenta</th>
+            <th>Descripción</th>
+            <th class="numeric">Monto</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mov in transactions %}
+        {% set cuenta = accounts.get(mov.account_id) %}
+        {% set destino = accounts.get(mov.destination_account_id) %}
+        <tr>
+            <td>{{ mov.date }}</td>
+            <td>
+                {% if mov.type == 'income' %}Ingreso
+                {% elif mov.type == 'expense' %}Egreso
+                {% elif mov.type == 'transfer' %}Transferencia
+                {% else %}{{ mov.type }}{% endif %}
+            </td>
+            <td>
+                {% if mov.type == 'transfer' and destino %}
+                {{ cuenta.name }} → {{ destino.name }}
+                {% elif cuenta %}
+                {{ cuenta.name }}
+                {% else %}
+                Cuenta #{{ mov.account_id }}
+                {% endif %}
+            </td>
+            <td>{{ mov.description }}</td>
+            <td class="numeric">
+                {% if cuenta %}
+                {{ currency_symbol(cuenta.currency) }} {{ "%.2f"|format(mov.amount_cents / 100) }}
+                {% else %}
+                {{ "%.2f"|format(mov.amount_cents / 100) }}
+                {% endif %}
+            </td>
+            <td class="actions">
+                <a class="btn btn-small" href="/transactions/{{ mov.id }}/edit">Editar</a>
+                <button
+                    class="btn btn-small btn-secondary"
+                    hx-delete="/transactions/{{ mov.id }}"
+                    hx-confirm="¿Eliminar movimiento '{{ mov.description }}'?"
+                    hx-target="body"
+                    hx-push-url="/transactions"
+                >
+                    Eliminar
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty-state">No hay movimientos. <a href="/transactions/new">Crea uno</a>.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ cuenta.name }} — FICE{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ cuenta.name }}</h1>
+    <a class="btn btn-secondary" href="/accounts/{{ cuenta.id }}/edit">Editar</a>
+</div>
+
+<dl class="detail-list">
+    <dt>Tipo</dt>
+    <dd>{{ cuenta.type }}</dd>
+
+    <dt>Moneda</dt>
+    <dd>{{ cuenta.currency }}</dd>
+
+    <dt>Saldo inicial</dt>
+    <dd>{{ cuenta.currency }} {{ "%.2f"|format(cuenta.opening_balance_cents / 100) }}</dd>
+
+    <dt>Saldo actual</dt>
+    <dd class="balance">{{ cuenta.currency }} {{ "%.2f"|format(balance / 100) }}</dd>
+
+    <dt>Estado</dt>
+    <dd>{{ 'Archivada' if cuenta.archived else 'Activa' }}</dd>
+</dl>
+
+<a class="btn btn-secondary" href="/accounts">← Volver a cuentas</a>
+{% endblock %}

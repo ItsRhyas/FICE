@@ -1,0 +1,37 @@
+<div class="card-inner">
+    <h2>Últimos movimientos</h2>
+    {% if recent_transactions %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Cuenta</th>
+                <th>Descripción</th>
+                <th class="numeric">Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mov in recent_transactions %}
+            {% set cuenta = accounts_by_id.get(mov.account_id) %}
+            <tr>
+                <td>{{ mov.date }}</td>
+                <td>
+                    {% if mov.type == 'income' %}Ingreso
+                    {% elif mov.type == 'expense' %}Egreso
+                    {% elif mov.type == 'transfer' %}Transferencia
+                    {% else %}{{ mov.type }}{% endif %}
+                </td>
+                <td>{{ cuenta.name if cuenta else 'Cuenta #' + mov.account_id|string }}</td>
+                <td>{{ mov.description }}</td>
+                <td class="numeric">
+                    {{ currency_symbol(cuenta.currency) if cuenta else '' }} {{ "%.2f"|format(mov.amount_cents / 100) }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state compact">No hay movimientos recientes.</p>
+    {% endif %}
+</div>

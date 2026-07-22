@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=FICE
+Comment=Personal Finance Tracker
+Exec=/home/itsrhyas/Desktop/FICE/fice.sh
+Path=/home/itsrhyas/Desktop/FICE
+Icon=
+Terminal=false
+Categories=Finance;Office;

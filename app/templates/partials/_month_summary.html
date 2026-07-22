@@ -1,0 +1,13 @@
+<div class="card-inner">
+    <h2>Este mes</h2>
+    <div class="month-summary-grid">
+        <div class="month-summary-item income">
+            <span class="month-summary-label">Ingresos</span>
+            <span class="month-summary-value">{{ "%.2f"|format(month_summary.income / 100) }}</span>
+        </div>
+        <div class="month-summary-item expense">
+            <span class="month-summary-label">Egresos</span>
+            <span class="month-summary-value">{{ "%.2f"|format(month_summary.expense / 100) }}</span>
+        </div>
+    </div>
+</div>

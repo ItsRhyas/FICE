@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FICE{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ptAFivzorrpz/w6mwfSLlr6roR/Cmw1jsyjaWM1z9iLtym4n0eWJ2DnZjsViJoz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <nav class="nav">
+        <a class="brand" href="/">FICE</a>
+        <div class="nav-links">
+            <a href="/accounts">Cuentas</a>
+            <a href="/transactions">Movimientos</a>
+            <a href="/">Dashboard</a>
+        </div>
+    </nav>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

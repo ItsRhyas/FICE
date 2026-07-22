@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar movimiento' if movimiento else 'Nuevo movimiento' }} — FICE{% endblock %}
+
+{% block content %}
+<h1>{{ 'Editar movimiento' if movimiento else 'Nuevo movimiento' }}</h1>
+
+{% if error %}
+<div class="alert alert-error">{{ error }}</div>
+{% endif %}
+
+<form
+    {% if movimiento %}
+    hx-put="/transactions/{{ movimiento.id }}"
+    {% else %}
+    hx-post="/transactions"
+    {% endif %}
+    hx-target="body"
+    hx-push-url="/transactions"
+>
+    <div class="form-group">
+        <label for="type">Tipo</label>
+        <select id="type" name="type" required {% if movimiento %}disabled{% endif %}>
+            <option value="income" {% if (movimiento and movimiento.type == 'income') or (not movimiento and type == 'income') %}selected{% endif %}>Ingreso</option>
+            <option value="expense" {% if (movimiento and movimiento.type == 'expense') or (not movimiento and type == 'expense') %}selected{% endif %}>Egreso</option>
+            <option value="transfer" {% if (movimiento and movimiento.type == 'transfer') or (not movimiento and type == 'transfer') %}selected{% endif %}>Transferencia</option>
+        </select>
+        {% if movimiento %}<input type="hidden" name="type" value="{{ movimiento.type }}">{% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="account_id">Cuenta</label>
+        <select id="account_id" name="account_id" required {% if movimiento %}disabled{% endif %}>
+            <option value="">Seleccione...</option>
+            {% for cuenta in accounts %}
+            <option value="{{ cuenta.id }}"
+                {% if (movimiento and movimiento.account_id == cuenta.id) or (not movimiento and account_id|string == cuenta.id|string) %}selected{% endif %}>
+                {{ cuenta.name }} ({{ cuenta.currency }})
+            </option>
+            {% endfor %}
+        </select>
+        {% if movimiento %}<input type="hidden" name="account_id" value="{{ movimiento.account_id }}">{% endif %}
+    </div>
+
+    <div id="destination-group" class="form-group {% if (movimiento and movimiento.type != 'transfer') or (not movimiento and type != 'transfer') %}hidden{% endif %}">
+        <label for="destination_account_id">Cuenta destino</label>
+        <select id="destination_account_id" name="destination_account_id" {% if movimiento %}disabled{% endif %}>
+            <option value="">Seleccione...</option>
+            {% for cuenta in accounts %}
+            <option value="{{ cuenta.id }}"
+                {% if (movimiento and movimiento.destination_account_id == cuenta.id) or (not movimiento and destination_account_id|string == cuenta.id|string) %}selected{% endif %}>
+                {{ cuenta.name }} ({{ cuenta.currency }})
+            </option>
+            {% endfor %}
+        </select>
+        {% if movimiento %}<input type="hidden" name="destination_account_id" value="{{ movimiento.destination_account_id or '' }}">{% endif %}
+        <p class="hint">Responsabilidad del usuario: las transferencias entre monedas usan el mismo monto.</p>
+    </div>
+
+    <div class="form-group">
+        <label for="amount_cents">Monto (centavos)</label>
+        <input
+            id="amount_cents"
+            name="amount_cents"
+            type="number"
+            step="1"
+            min="1"
+            value="{{ movimiento.amount_cents if movimiento else amount_cents | default('') }}"
+            required
+        >
+        <p class="hint">Ingrese el monto como número entero. Se mostrará con formato de moneda.</p>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Descripción</label>
+        <input
+            id="description"
+            name="description"
+            type="text"
+            maxlength="200"
+            value="{{ movimiento.description if movimiento else description | default('') }}"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="date">Fecha</label>
+        <input
+            id="date"
+            name="date"
+            type="date"
+            value="{{ movimiento.date.isoformat() if movimiento else date }}"
+            required
+        >
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' if movimiento else 'Crear movimiento' }}</button>
+        <a href="/transactions" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+(function () {
+    const typeSelect = document.getElementById('type');
+    const destinationGroup = document.getElementById('destination-group');
+    const destinationSelect = document.getElementById('destination_account_id');
+
+    function toggleDestination() {
+        if (typeSelect.value === 'transfer') {
+            destinationGroup.classList.remove('hidden');
+            destinationSelect.required = true;
+        } else {
+            destinationGroup.classList.add('hidden');
+            destinationSelect.required = false;
+            destinationSelect.value = '';
+        }
+    }
+
+    typeSelect.addEventListener('change', toggleDestination);
+    toggleDestination();
+})();
+</script>
+{% endblock %}

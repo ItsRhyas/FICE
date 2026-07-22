@@ -1,0 +1,13 @@
+<div class="card-inner">
+    <h2>Patrimonio</h2>
+    <div class="net-worth-grid">
+        <div class="net-worth-item">
+            <span class="net-worth-label">USD</span>
+            <span class="net-worth-value">{{ currency_symbol('USD') }} {{ "%.2f"|format(net_worth.USD / 100) }}</span>
+        </div>
+        <div class="net-worth-item">
+            <span class="net-worth-label">NIO</span>
+            <span class="net-worth-value">{{ currency_symbol('NIO') }} {{ "%.2f"|format(net_worth.NIO / 100) }}</span>
+        </div>
+    </div>
+</div>

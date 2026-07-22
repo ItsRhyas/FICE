@@ -1,0 +1,15 @@
+<div class="card-inner">
+    <h2>Saldo por cuenta</h2>
+    {% if account_balances %}
+    <ul class="balance-list">
+        {% for item in account_balances %}
+        <li class="balance-item">
+            <span class="balance-name">{{ item.account.name }}</span>
+            <span class="balance-amount">{{ currency_symbol(item.currency) }} {{ "%.2f"|format(item.balance / 100) }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state compact">No hay cuentas activas.</p>
+    {% endif %}
+</div>
